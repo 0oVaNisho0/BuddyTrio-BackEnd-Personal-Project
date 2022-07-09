@@ -1,6 +1,7 @@
 const { Product } = require('../models');
 const createError = require('../utils/createError');
 const cloudinary = require('../utils/cloudinary');
+const fs = require('fs');
 
 exports.addProduct = async (req, res, next) => {
   try {
@@ -40,6 +41,12 @@ exports.addProduct = async (req, res, next) => {
     res.status(201).json({ product });
   } catch (err) {
     next(err);
+  } finally {
+    if (req?.files?.productPic) {
+      if (req?.files?.productPic[0]) {
+        fs.unlinkSync(req.files.productPic[0].path);
+      }
+    }
   }
 };
 
@@ -94,6 +101,12 @@ exports.updateProduct = async (req, res, next) => {
     res.json({ product });
   } catch (err) {
     next(err);
+  } finally {
+    if (req?.files?.productPic) {
+      if (req?.files?.productPic[0]) {
+        fs.unlinkSync(req.files.productPic[0].path);
+      }
+    }
   }
 };
 
